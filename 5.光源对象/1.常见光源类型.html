@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="../build/three.js"></script>
+  <script src="../build/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+    // 创建场景对象
+    var scene=new THREE.Scene();
+
+    //创建网格模型
+    var geometry=new THREE.BoxGeometry(100,100,100);
+    var material=new THREE.MeshLambertMaterial({
+      color:0xff0000
+    });//材质对象
+    var mesh=new THREE.Mesh(geometry,material);
+    scene.add(mesh)
+
+    //光源设置
+    // var point=new THREE.PointLight(0xffffff,1,100);
+    // point.position.set(400,200,300)
+    // scene.add(point)
+    // var sphereSize = 1;
+    // var pointLightHelper = new THREE.PointLightHelper( point, sphereSize );
+    // scene.add( pointLightHelper );
+    //环境光
+    // var ambient=new THREE.AmbientLight(0x888888)
+    // scene.add(ambient)
+
+    //平行光
+    // var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    // directionalLight.position.set(80, 100, 50);
+    // directionalLight.target = mesh;
+    // scene.add(directionalLight);
+    // var helper = new THREE.DirectionalLightHelper( directionalLight, 5 );
+    // scene.add( helper );
+
+    // 聚光光源
+    var spotLight = new THREE.SpotLight(0xffffff);
+    // 设置聚光光源位置
+    spotLight.position.set(100, 100, 100);
+    // 聚光灯光源指向网格模型mesh2
+    spotLight.target = mesh;
+    // 设置聚光光源发散角度
+    spotLight.angle = Math.PI / 6
+    scene.add(spotLight);//光对象添加到scene场景中
+    var spotLightHelper = new THREE.SpotLightHelper( spotLight );
+    scene.add( spotLightHelper );
+
+    // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+    var axisHelper = new THREE.AxisHelper(250);
+    scene.add(axisHelper);
+
+    //相机设置
+    var width=window.innerWidth;
+    var height=window.innerHeight;
+    var k=width/height;
+    var s=200;
+    //创建相机对象
+    var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
+    camera.position.set(200,50,200)
+    camera.lookAt(scene.position)
+
+    //创建渲染对象
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setSize(width,height)
+    renderer.setClearColor(0xb9d3ff,1);
+    document.body.appendChild(renderer.domElement)
+
+    function render(){
+      renderer.render(scene,camera);
+      requestAnimationFrame(render)
+    }
+    render();
+
+    var controls=new THREE.OrbitControls(camera,render.domElement);
+    // controls.addEventListener('change', render);
+
+  </script>
+</body>
+</html>

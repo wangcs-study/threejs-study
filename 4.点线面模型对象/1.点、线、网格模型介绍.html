@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="../build/three.js"></script>
+  <script src="../build/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+    // 创建场景对象
+    var scene=new THREE.Scene();
+
+    //创建网格模型
+    var geometry=new THREE.BoxGeometry(100,100,100);
+    var material=new THREE.MeshLambertMaterial({
+      color:0xff0000,
+      wireframe:true
+    });//材质对象
+    var mesh=new THREE.Mesh(geometry,material);
+    var axis=new THREE.Vector3(1,1,1);
+    axis.normalize();
+    mesh.translateOnAxis(axis,100);
+    scene.add(mesh);
+
+    //线模型
+    // var geometry = new THREE.BoxGeometry(100, 100, 100); //创建一个立方体几何对象Geometry
+    // // 线条渲染模式
+    // var material=new THREE.LineBasicMaterial({
+    //     color:0xff0000 //线条颜色
+    // });//材质对象
+    // // 创建线模型对象   构造函数：Line、LineLoop、LineSegments
+    // // var line=new THREE.Line(geometry,material);//线条模型对象
+    // // var line=new THREE.LineLoop(geometry,material);//线条模型对象
+    // var line=new THREE.LineSegments(geometry,material);//线条模型对象
+    // scene.add(line)
+
+
+    //点模型
+    // var geometry = new THREE.Geometry();
+    // var p1 = new THREE.Vector3( 0, 0, 0 );
+    // var p2 = new THREE.Vector3( 50, 0, 50 );
+    // var p3 = new THREE.Vector3( 50, 50, 50 );
+    // var p4 = new THREE.Vector3( 0, 50, 0 );
+    // //绑定顶点到几何体
+    // geometry.vertices.push(p1, p2, p3, p4);
+    // //如果需要每个点展示不同颜色，需要给每个顶点添加颜色，也可以通过材质设置统一颜色
+    // geometry.colors = [
+    //     new THREE.Color( 0xFF0000 ), 
+    //     new THREE.Color( 0x00FF00 ), 
+    //     new THREE.Color( 0x0000FF ), 
+    //     new THREE.Color( 0xFFFF00 )
+    // ];
+    // // 点渲染模式
+    // var material = new THREE.PointsMaterial({
+    //   color: 0xff0000,
+    //   size: 5.0 //点对象像素尺寸
+    // }); //材质对象
+    // var points = new THREE.Points(geometry, material); //点模型对象
+    // scene.add(points);
+
+    //光源设置
+    var point=new THREE.PointLight(0xffffff);
+    point.position.set(400,200,300)
+    scene.add(point)
+    //环境光
+    var ambient=new THREE.AmbientLight(0x444444)
+    scene.add(ambient)
+
+    // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+    var axisHelper = new THREE.AxisHelper(250);
+    scene.add(axisHelper);
+
+    //相机设置
+    var width=window.innerWidth;
+    var height=window.innerHeight;
+    var k=width/height;
+    var s=200;
+    //创建相机对象
+    var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
+    camera.position.set(200,50,200)
+    camera.lookAt(scene.position)
+
+    //创建渲染对象
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setSize(width,height)
+    renderer.setClearColor(0xb9d3ff,1);
+    document.body.appendChild(renderer.domElement)
+
+    function render(){
+      renderer.render(scene,camera);
+      requestAnimationFrame(render)
+    }
+    render();
+
+    var controls=new THREE.OrbitControls(camera,render.domElement);
+    // controls.addEventListener('change', render);
+
+  </script>
+</body>
+</html>
