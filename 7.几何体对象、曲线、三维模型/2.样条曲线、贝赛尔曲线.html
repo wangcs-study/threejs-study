@@ -34,51 +34,6 @@
     var line = new THREE.Line(geometry, material);
     scene.add(line); //线条对象添加到场景中
 
-    // var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
-    // var R = 100; //圆弧半径
-    // var N = 50; //分段数量
-    // // 批量生成圆弧上的顶点数据
-    // for (var i = 0; i < N; i++) {
-    //   var angle = 2 * Math.PI / N * i;
-    //   var x = R * Math.sin(angle);
-    //   var y = R * Math.cos(angle);
-    //   geometry.vertices.push(new THREE.Vector3(x, y, 0));
-    // }
-    // // 插入最后一个点，line渲染模式下，产生闭合效果
-    // geometry.vertices.push(geometry.vertices[0])
-    // //材质对象
-    // var material = new THREE.LineBasicMaterial({
-    //   color: 0x000000
-    // });
-    // //线条模型对象
-    // var line = new THREE.Line(geometry, material);
-    // scene.add(line); //线条对象添加到场景中
-
-    //绘制直线
-    // var geometry=new THREE.Geometry()
-    // var p1=new THREE.Vector3(50,0,0);
-    // var p2=new THREE.Vector3(0,70,0);
-    // geometry.vertices.push(p1,p2)
-    // var material=new THREE.LineBasicMaterial({
-    //   colro:0xffff00
-    // });
-    // var line=new THREE.Line(geometry,material)
-    // scene.add(line)
-
-    //绘制三维直线
-    // var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
-    // var p1 = new THREE.Vector2(50, 0); //顶点1坐标
-    // var p2 = new THREE.Vector2(0, 70); //顶点2坐标
-    // // 二维直线LineCurve
-    // var LineCurve = new THREE.LineCurve(p1, p2);
-    // var pointArr = LineCurve.getPoints(10);
-    // geometry.setFromPoints(pointArr);
-    // // geometry.vertices.push(p1,p2)
-    // var material=new THREE.LineBasicMaterial({
-    //   colro:0xffff00
-    // });
-    // var line=new THREE.Line(geometry,material)
-    // scene.add(line)
 
     //光源设置
     var point=new THREE.PointLight(0xffffff);
