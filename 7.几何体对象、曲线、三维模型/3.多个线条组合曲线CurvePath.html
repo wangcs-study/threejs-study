@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="../build/three.js"></script>
+  <script src="../build/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+    // 创建场景对象
+    var scene=new THREE.Scene();
+
+    var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
+    // 绘制一个U型轮廓
+    var R = 80;//圆弧半径
+    var arc = new THREE.ArcCurve(0, 0, R, 0, Math.PI, true);
+    // 半圆弧的一个端点作为直线的一个端点
+    var line1 = new THREE.LineCurve(new THREE.Vector2(R, 100, 0), new THREE.Vector2(R, 0, 0));
+    var line2 = new THREE.LineCurve(new THREE.Vector2(-R, 0, 0), new THREE.Vector2(-R, 100, 0));
+    // 创建组合曲线对象CurvePath
+    var CurvePath = new THREE.CurvePath();
+    // 把多个线条插入到CurvePath中
+    CurvePath.curves.push(line1, arc, line2);
+    //分段数200
+    var points = CurvePath.getPoints(200);
+    // setFromPoints方法从points中提取数据改变几何体的顶点属性vertices
+    geometry.setFromPoints(points);
+    //材质对象
+    var material = new THREE.LineBasicMaterial({
+      color: 0x000000
+    });
+    //线条模型对象
+    var line = new THREE.Line(geometry, material);
+    scene.add(line); //线条对象添加到场景中
+
+
+    //光源设置
+    var point=new THREE.PointLight(0xffffff);
+    point.position.set(400,200,300)
+    scene.add(point)
+    //环境光
+    var ambient=new THREE.AmbientLight(0x444444)
+    scene.add(ambient)
+
+    // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+    var axisHelper = new THREE.AxisHelper(250);
+    scene.add(axisHelper);
+
+    //相机设置
+    var width=window.innerWidth;
+    var height=window.innerHeight;
+    var k=width/height;
+    var s=200;
+    //创建相机对象
+    var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
+    camera.position.set(200,50,200)
+    camera.lookAt(scene.position)
+
+    //创建渲染对象
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setSize(width,height)
+    renderer.setClearColor(0xb9d3ff,1);
+    document.body.appendChild(renderer.domElement)
+
+    function render(){
+      renderer.render(scene,camera);
+      requestAnimationFrame(render)
+    }
+    render();
+
+    var controls=new THREE.OrbitControls(camera,render.domElement);
+    // controls.addEventListener('change', render);
+
+  </script>
+</body>
+</html>

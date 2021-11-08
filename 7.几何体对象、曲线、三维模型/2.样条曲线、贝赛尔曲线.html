@@ -19,11 +19,55 @@
     // 创建场景对象
     var scene=new THREE.Scene();
 
+    //样条曲线
+    // var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
+    // // 三维样条曲线  Catmull-Rom算法
+    // var curve = new THREE.CatmullRomCurve3([
+    //   new THREE.Vector3(-50, 20, 90),
+    //   new THREE.Vector3(-10, 40, 40),
+    //   new THREE.Vector3(0, 0, 0),
+    //   new THREE.Vector3(60, -60, 0),
+    //   new THREE.Vector3(70, 0, 80)
+    // ]);
+    // //getPoints是基类Curve的方法，返回一个vector3对象作为元素组成的数组
+    // var points = curve.getPoints(100); //分段数100，返回101个顶点
+    // // setFromPoints方法从points中提取数据改变几何体的顶点属性vertices
+    // geometry.setFromPoints(points);
+    // //材质对象
+    // var material = new THREE.LineBasicMaterial({
+    //   color: 0x000000
+    // });
+    // //线条模型对象
+    // var line = new THREE.Line(geometry, material);
+    // scene.add(line); //线条对象添加到场景中
+
+    //贝塞尔曲线-三维二次
+    // var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
+    // var p1 = new THREE.Vector3(-80, 0, 0);
+    // var p2 = new THREE.Vector3(20, 100, 0);
+    // var p3 = new THREE.Vector3(80, 0, 0);
+    // var curve = new THREE.QuadraticBezierCurve3(p1, p2, p3);
+    // //getPoints是基类Curve的方法，返回一个vector3对象作为元素组成的数组
+    // var points = curve.getPoints(100); //分段数100，返回101个顶点
+    // // setFromPoints方法从points中提取数据改变几何体的顶点属性vertices
+    // geometry.setFromPoints(points);
+    // //材质对象
+    // var material = new THREE.LineBasicMaterial({
+    //   color: 0x000000
+    // });
+    // //线条模型对象
+    // var line = new THREE.Line(geometry, material);
+    // scene.add(line); //线条对象添加到场景中
+
+    //贝塞尔曲线-三维三次
     var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
-    //参数：0, 0圆弧坐标原点x，y  100：圆弧半径    0, 2 * Math.PI：圆弧起始角度
-    var arc = new THREE.ArcCurve(0, 0, 100, 0, 1 * Math.PI,true);
-    //getPoints是基类Curve的方法，返回一个vector2对象作为元素组成的数组
-    var points = arc.getPoints(50);//分段数50，返回51个顶点
+    var p1 = new THREE.Vector3(-80, 0, 0);
+    var p2 = new THREE.Vector3(-40, 100, 0);
+    var p3 = new THREE.Vector3(40, 100, 0);
+    var p4 = new THREE.Vector3(80, 0, 0);
+    var curve = new THREE.CubicBezierCurve3(p1, p2, p3, p4);
+    //getPoints是基类Curve的方法，返回一个vector3对象作为元素组成的数组
+    var points = curve.getPoints(100); //分段数100，返回101个顶点
     // setFromPoints方法从points中提取数据改变几何体的顶点属性vertices
     geometry.setFromPoints(points);
     //材质对象
