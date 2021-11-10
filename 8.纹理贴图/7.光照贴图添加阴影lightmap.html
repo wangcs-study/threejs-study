@@ -19,31 +19,18 @@
     // 创建场景对象
     var scene=new THREE.Scene();
 
-    //---法线贴图
-    // var geometry=new THREE.BoxGeometry(100,100,100);
-    // var textureLoader=new THREE.TextureLoader();
-    // var textureNormal=textureLoader.load('../assets/threejs54normal3_256.jpg');
-    // var material=new THREE.MeshPhongMaterial({
-    //   color:0xff0000,
-    //   normalMap:textureNormal,//法线贴图
-    //   normalScale:new THREE.Vector2(5,5)
-    // });
-    // var mesh=new THREE.Mesh(geometry,material);
-    // scene.add(mesh)
-
-    //---地球案例
-    var geometry=new THREE.SphereGeometry(100,25,25);
-    var textureLoader=new THREE.TextureLoader();
-    var texture=textureLoader.load('../assets/Earth.png');
-    var textureNormal=textureLoader.load('../assets/EarthNormal.png');
-    var material=new THREE.MeshPhongMaterial({
-      map:texture,
-      normalMap:textureNormal,
-      normalScale:new THREE.Vector2(1.2,1.2)
-    })
-    var mesh=new THREE.Mesh(geometry,material);
-    scene.add(mesh)
-    
+    var planeGeometry = new THREE.PlaneGeometry(300, 200);
+    planeGeometry.faceVertexUvs[1] = planeGeometry.faceVertexUvs[0];
+    var textureLoader = new THREE.TextureLoader();
+    // 加载光照贴图
+    var textureLight = textureLoader.load('shadow.png');
+    var planeMaterial = new THREE.MeshLambertMaterial({
+      color: 0x999999,
+      lightMap:textureLight,// 设置光照贴图
+      // lightMapIntensity:0.5,//烘培光照的强度. 默认 1.
+    });
+    var planeMesh = new THREE.Mesh(planeGeometry, planeMaterial); //网格模型对象Mesh
+    scene.add(planeMesh)
 
     //光源设置
     var point=new THREE.PointLight(0xffffff);

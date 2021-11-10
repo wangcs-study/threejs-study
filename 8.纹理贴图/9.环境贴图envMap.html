@@ -19,31 +19,24 @@
     // 创建场景对象
     var scene=new THREE.Scene();
 
-    //---法线贴图
-    // var geometry=new THREE.BoxGeometry(100,100,100);
-    // var textureLoader=new THREE.TextureLoader();
-    // var textureNormal=textureLoader.load('../assets/threejs54normal3_256.jpg');
-    // var material=new THREE.MeshPhongMaterial({
-    //   color:0xff0000,
-    //   normalMap:textureNormal,//法线贴图
-    //   normalScale:new THREE.Vector2(5,5)
-    // });
-    // var mesh=new THREE.Mesh(geometry,material);
-    // scene.add(mesh)
+    var geometry = new THREE.BoxGeometry(100, 100, 100); //立方体
 
-    //---地球案例
-    var geometry=new THREE.SphereGeometry(100,25,25);
-    var textureLoader=new THREE.TextureLoader();
-    var texture=textureLoader.load('../assets/Earth.png');
-    var textureNormal=textureLoader.load('../assets/EarthNormal.png');
-    var material=new THREE.MeshPhongMaterial({
-      map:texture,
-      normalMap:textureNormal,
-      normalScale:new THREE.Vector2(1.2,1.2)
-    })
-    var mesh=new THREE.Mesh(geometry,material);
-    scene.add(mesh)
-    
+    var loader = new THREE.CubeTextureLoader();
+    // 所有贴图在同一目录下，可以使用该方法设置共用路径
+    loader.setPath('环境贴图/');
+    // 立方体纹理加载器返回立方体纹理对象CubeTexture
+    var CubeTexture = loader.load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+    //材质对象Material
+    var material = new THREE.MeshPhongMaterial({
+      //网格模型设置颜色，网格模型颜色和环境贴图会进行融合计算
+      // color:0xff0000,
+      envMap: CubeTexture, //设置环境贴图
+      // 环境贴图反射率   控制环境贴图对被渲染三维模型影响程度
+      // reflectivity: 0.1,
+    });
+    console.log(CubeTexture.image);
+    var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+    scene.add(mesh); //网格模型添加到场景中
 
     //光源设置
     var point=new THREE.PointLight(0xffffff);
