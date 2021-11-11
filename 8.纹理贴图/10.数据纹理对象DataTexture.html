@@ -19,24 +19,55 @@
     // 创建场景对象
     var scene=new THREE.Scene();
 
-    var geometry = new THREE.BoxGeometry(100, 100, 100); //立方体
+    //---一张图片的RGB值
+    // var geometry=new THREE.PlaneGeometry(128,128);
+    // var width=32;
+    // var height=32;
+    // var size=width*height;
+    // var data=new Uint8Array(size*3);
+    // for(let i=0;i<size*3;i+=3){
+    //   data[i]=255*Math.random()
+    //   data[i+1]=255*Math.random()
+    //   data[i+2]=255*Math.random()
+    // }
 
-    var loader = new THREE.CubeTextureLoader();
-    // 所有贴图在同一目录下，可以使用该方法设置共用路径
-    loader.setPath('环境贴图/');
-    // 立方体纹理加载器返回立方体纹理对象CubeTexture
-    var CubeTexture = loader.load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
-    //材质对象Material
+    // var texture=new THREE.DataTexture(data,width,height,THREE.RGBFormat);
+    // texture.needsUpdate=true;
+    // var material=new THREE.MeshPhongMaterial({
+    //   map:texture
+    // })
+    // var mesh=new THREE.Mesh(geometry,material)
+    // scene.add(mesh)
+  
+    //一张图片的RGBA值
+    var geometry = new THREE.PlaneGeometry(128, 128); //矩形平面
+    /**
+    * 创建纹理对象的像素数据
+    */
+    var width = 32; //纹理宽度
+    var height = 32; //纹理高度
+    var size = width * height; //像素大小
+    var data = new Uint8Array(size * 4); //size*4：像素在缓冲区占用空间
+    for (let i = 0; i < size * 4; i += 4) {
+      // 随机设置RGB分量的值
+      data[i] = 255 * Math.random()
+      data[i + 1] = 255 * Math.random()
+      data[i + 2] = 255 * Math.random()
+      // 设置透明度分量A
+      data[i + 3] = 255 * 0.5
+    }
+    // 创建数据文理对象   RGBA格式：THREE.RGBAFormat
+    var texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
+    texture.needsUpdate = true; //纹理更新
+    //打印纹理对象的image属性
+    console.log(texture.image);
+
     var material = new THREE.MeshPhongMaterial({
-      //网格模型设置颜色，网格模型颜色和环境贴图会进行融合计算
-      // color:0xff0000,
-      envMap: CubeTexture, //设置环境贴图
-      // 环境贴图反射率   控制环境贴图对被渲染三维模型影响程度
-      // reflectivity: 0.1,
+      map: texture, // 设置纹理贴图
+      transparent:true,//允许透明设置
     });
-    console.log(CubeTexture.image);
-    var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
-    scene.add(mesh); //网格模型添加到场景中
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh)
 
     //光源设置
     var point=new THREE.PointLight(0xffffff);
