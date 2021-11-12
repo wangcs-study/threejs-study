@@ -19,13 +19,22 @@
     // 创建场景对象
     var scene=new THREE.Scene();
 
-    //创建网格模型
-    var geometry=new THREE.BoxGeometry(100,100,100);
-    var material=new THREE.MeshLambertMaterial({
-      color:0xff0000
-    });//材质对象
-    var mesh=new THREE.Mesh(geometry,material);
-    scene.add(mesh)
+    // 通过ObjectLoader加载模型文件model.json
+    var loader = new THREE.ObjectLoader();
+    var mixer = null; //声明一个混合器变量
+    // 加载文件返回一个对象obj
+    loader.load("model.json", function(obj) {
+      obj.scale.set(15, 15, 15);//缩放加载的模型
+      scene.add(obj);
+      // obj作为混合器的参数，可以播放obj包含的帧动画数据
+      mixer = new THREE.AnimationMixer(obj);
+      // obj.animations[0]：获得剪辑clip对象
+      // // 剪辑clip作为参数，通过混合器clipAction方法返回一个操作对象AnimationAction
+      var AnimationAction = mixer.clipAction(obj.animations[0]);
+      AnimationAction.play();
+    });
+
+
 
     //光源设置
     var point=new THREE.PointLight(0xffffff);
@@ -45,12 +54,9 @@
     var k=width/height;
     var s=200;
     //创建相机对象
-    // var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,300)  //正射投影
-    // camera.position.set(200,50,200)
-    var camera=new THREE.PerspectiveCamera(60,width/height,1,1000);
-    camera.position.set(-100,200,200);
-    // camera.lookAt(scene.position) //用来指定相机拍摄对象的坐标位置
-    camera.lookAt(new THREE.Vector3(-500,-500,0)) //用来指定相机拍摄对象的坐标位置
+    var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
+    camera.position.set(200,50,200)
+    camera.lookAt(scene.position)
 
     //创建渲染对象
     var renderer=new THREE.WebGLRenderer();
@@ -58,9 +64,16 @@
     renderer.setClearColor(0xb9d3ff,1);
     document.body.appendChild(renderer.domElement)
 
+    var clock = new THREE.Clock();
+
     function render(){
       renderer.render(scene,camera);
-      requestAnimationFrame(render)
+      requestAnimationFrame(render);
+      if(mixer!==null){
+        //clock.getDelta()方法获得两帧的时间间隔
+        // 更新混合器相关的时间
+        mixer.update(clock.getDelta());
+      }
     }
     render();
 
