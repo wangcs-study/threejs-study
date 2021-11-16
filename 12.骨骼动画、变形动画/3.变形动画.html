@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="../build/three.js"></script>
+  <script src="../build/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+    // 创建场景对象
+    var scene=new THREE.Scene();
+
+    var geometry=new THREE.BoxGeometry(50,50,50);
+    
+    var box1=new THREE.BoxGeometry(100,5,100);
+    var box2=new THREE.BoxGeometry(5,200,5);
+
+    geometry.morphTargets[0]={name:'target1',vertices:box1.vertices};
+    geometry.morphTargets[1]={name:'target2',vertices:box2.vertices};
+    var material=new THREE.MeshLambertMaterial({
+      morphTargets:true,//允许变形
+      color:0x0000ff
+    })
+    var mesh=new THREE.Mesh(geometry,material);
+    scene.add(mesh)
+
+    mesh.morphTargetInfluences[0] = 0.5;
+    mesh.morphTargetInfluences[1]=1;
+
+    //设置关键帧数据
+    var Track1=new THREE.KeyframeTrack('.morphTargetInfluences[0]',[0,10,20],[0,1,0])
+    var Track2=new THREE.KeyframeTrack('.morphTargetInfluences[1]',[20,30,40],[0,1,0])
+    var clip=new THREE.AnimationClip("default",40,[Track1,Track2])
+
+    var mixer=new THREE.AnimationMixer(mesh);
+    var AnimationAction=mixer.clipAction(clip);
+    AnimationAction.timeScale=5;
+    AnimationAction.play();
+
+
+
+
+    //光源设置
+    var point=new THREE.PointLight(0xffffff);
+    point.position.set(400,200,300)
+    scene.add(point)
+    //环境光
+    var ambient=new THREE.AmbientLight(0x444444)
+    scene.add(ambient)
+
+    
+
+    // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+    var axisHelper = new THREE.AxisHelper(250);
+    scene.add(axisHelper);
+
+    //相机设置
+    var width=window.innerWidth;
+    var height=window.innerHeight;
+    var k=width/height;
+    var s=200;
+    //创建相机对象
+    var camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
+    camera.position.set(200,50,200)
+    camera.lookAt(scene.position)
+
+    //创建渲染对象
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setSize(width,height)
+    renderer.setClearColor(0xb9d3ff,1);
+    document.body.appendChild(renderer.domElement);
+
+    var clock=new THREE.Clock();
+
+    function render(){
+      renderer.render(scene,camera);
+      requestAnimationFrame(render); 
+      // clock.getDelta() 该方法获取两帧的时间间隔
+      mixer.update(clock.getDelta())
+    }
+    render();
+
+    var controls=new THREE.OrbitControls(camera,render.domElement);
+    // controls.addEventListener('change', render);
+
+  </script>
+</body>
+</html>
